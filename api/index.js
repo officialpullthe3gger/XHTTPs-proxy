@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   try {
-    const target = "https://novix.fyi";
+    const target = "https://xray.novix.fyi";
     const url = target + req.url;
 
     const response = await fetch(url, {

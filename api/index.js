@@ -1,24 +1,18 @@
 export default async function handler(req, res) {
-  const target = "https://novix.fyi";
+  try {
+    const target = "https://novix.fyi";
+    const url = target + req.url;
 
-  const url = target + req.url;
+    const response = await fetch(url, {
+      method: req.method,
+      headers: req.headers,
+    });
 
-  const response = await fetch(url, {
-    method: req.method,
-    headers: req.headers,
-    body:
-      req.method !== "GET" && req.method !== "HEAD"
-        ? req.body
-        : undefined,
-  });
+    const text = await response.text();
 
-  const data = await response.arrayBuffer();
-
-  res.status(response.status);
-
-  response.headers.forEach((value, key) => {
-    res.setHeader(key, value);
-  });
-
-  res.send(Buffer.from(data));
+    res.status(response.status);
+    res.send(text);
+  } catch (err) {
+    res.status(500).send("ERROR: " + err.message);
+  }
 }
